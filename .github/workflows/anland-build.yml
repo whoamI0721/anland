@@ -24,12 +24,13 @@ jobs:
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-13250338_latest.zip \
             -O /tmp/cmdline-tools.zip
           unzip -q /tmp/cmdline-tools.zip -d /tmp/cmdline-tools
-          mv /tmp/cmdline-tools/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest
-          rm -rf /tmp/cmdline-tools /tmp/cmdline-tools.zip
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          mv /tmp/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          rm -rf /tmp/cmdline-tools.zip
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 
       - name: Install NDK and SDK components
         run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           sdkmanager "ndk;29.0.13113456" "platforms;android-36"
 
       - name: Build debug APK
@@ -46,3 +47,4 @@ jobs:
           path: |
             consumers/anland_v4/android_consumer/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
+concurrency: 
