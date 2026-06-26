@@ -59,10 +59,7 @@ struct buf_info {
  * stalling the stream on an unknown DATA_MSG_* header. */
 #define INPUT_TYPE_DISPLAY_REFRESH 7
 #define INPUT_TYPE_CLIPBOARD      8
-#define INPUT_TYPE_TEXT_INPUT      9
-#define INPUT_TYPE_ACTION 10
-
-#define INPUT_ACTION_DOWN    0
+#define INPUT_TYPE_TEXT_INPUT     9
 
 #define INPUT_ACTION_DOWN    0
 #define INPUT_ACTION_UP      1
@@ -100,32 +97,26 @@ struct InputEvent {
             uint32_t refresh_mhz; // current display refresh rate, milli-Hz
         } display;
         struct {
-            uint32_t size; //这个packet只是通知包 作为header真正数据会集中发送,这里通知随后数据的大小
+            uint32_t size; // notification header; raw clipboard bytes follow
         } clipboard;
         struct {
-            uint32_t size; //这个packet只是通知包 作为header真正数据会集中发送,这里通知随后数据的大小
+            uint32_t size; // notification header; raw UTF-8 text bytes follow
         } text_input;
-        struct {
-            uint32_t action;
-            int32_t value;
-        } input_action;
         struct {
             uint32_t padding[4];
         };
     };
 } __attribute__((packed));
 
-struct OutputEvent{
+struct OutputEvent {
     uint32_t type;
     union {
         struct {
-            uint32_t size; //这个packet只是通知包 作为header真正数据会集中发送,这里通知随后数据的大小
+            uint32_t size; // notification header; raw clipboard bytes follow
         } clipboard;
-        struct
-        {
+        struct {
             uint32_t padding[4];
         };
-
     };
 } __attribute__((packed));
 
@@ -172,6 +163,5 @@ struct audio_msg {
     uint32_t type;       /* AUDIO_MSG_FORMAT | AUDIO_MSG_PCM */
     uint32_t size;       /* payload bytes that follow this header */
 } __attribute__((packed));
-
 
 #endif
